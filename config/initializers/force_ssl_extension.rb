@@ -1,8 +1,8 @@
 ActionController::ForceSSL::ClassMethods.module_eval do
   def force_ssl(options = {})
     config = Rails.application.config
-
-    return unless config.use_ssl # <= this is new
+    use_ssl = config.use_ssl if config.respond_to? :use_ssl
+    return unless use_ssl # <= this is new
 
     host = options.delete(:host)
     port = config.ssl_port if config.respond_to?(:ssl_port) && config.ssl_port.present? # <= this is also new

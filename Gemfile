@@ -9,8 +9,9 @@ gem 'paperclip', '~> 2.3', :require => 'paperclip'
 
 gem 'oauth'
 
-gem "jquery-ui-rails", "~> 4.0.5"
+gem 'jquery-ui-rails', '~> 4.0.5'
 
+gem 'rack-cors', :require => 'rack/cors'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.1.6'

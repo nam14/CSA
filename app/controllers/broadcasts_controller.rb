@@ -4,7 +4,7 @@ class BroadcastsController < ApplicationController
   rescue_from ActiveRecord::RecordNotFound, with: :squelch_record_not_found
   # This is an admin specific controller, so enforce access by admin only
   # This is a very simple form of authorisation
-  before_action :admin_required
+ # before_action :admin_required
 
   # Default number of entries per page
   PER_PAGE = 12

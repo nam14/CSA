@@ -2,11 +2,28 @@ class UsersController < ApplicationController
   # Since dealing with sensitive data we use SSL
   # Only destroy does not require SSL, all the others do
 
-  force_ssl except: [:destroy]
+ # force_ssl except: [:destroy]
 
-  before_action :admin_required, only: [:index, :search, :destroy]
+
+
+  def allow_cors
+    headers["Access-Control-Allow-Origin"] = "*"
+    headers["Access-Control-Allow-Methods"] = %w{GET POST PUT DELETE}.join(",")
+    headers["Access-Control-Allow-Headers"] =
+        %w{Origin Accept Content-Type X-Requested-With X-CSRF-Token}.join(",")
+
+    head(:ok) if request.request_method == "OPTIONS"
+    # or, render text: ''
+    # if that's more your style
+  end
+
+#  before_action :admin_required, only: [:index, :search, :destroy]
   before_action :set_current_page, except: [:index]
   before_action :set_user, only: [:show, :edit, :update, :destroy]
+
+  before_filter :allow_cors
+
+
 
   rescue_from ActiveRecord::RecordNotFound, with: :show_record_not_found
 
@@ -38,9 +55,12 @@ class UsersController < ApplicationController
   # GET /users
   # GET /users.json
   def index
-    @users = User.paginate(page: params[:page],
-                           per_page: params[:per_page])
-                 .order('surname, firstname')
+    @users = User.all
+      respond_to :html, :json
+
+    #  User.paginate(page: params[:page],
+         #               per_page: params[:per_page])
+           #     .order('surname, firstname')
   end
 
   # GET /users/1

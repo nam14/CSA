@@ -24,7 +24,7 @@ User.transaction do
                       phone: '01970 622422',
                       grad_year: 1985)
   UserDetail.create!(login: 'admin',
-                     password: 'taliesin',
+                     password: 'password',
                      user: user)
 
   # Create some dummy feeds
