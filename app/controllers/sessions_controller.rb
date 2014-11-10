@@ -23,6 +23,8 @@ class SessionsController < ApplicationController
                                      :user => current_user })
 
       #redirect_to(uri || home_url)
+
+
       #flash[:notice] = I18n.t('sessions.login-success')
     else
 
