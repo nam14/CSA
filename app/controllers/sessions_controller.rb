@@ -2,6 +2,7 @@ class SessionsController < ApplicationController
   force_ssl except: [:destroy]
 
   skip_before_action :login_required
+  skip_before_action :verify_authenticity_token
 
   respond_to :json
 
@@ -12,25 +13,15 @@ class SessionsController < ApplicationController
   # POST /session
   def create 
     user_detail = UserDetail.authenticate(params[:login], params[:password])
+    render :json => user_detail
     if user_detail
       self.current_user = user_detail
       uri = session[:original_uri]
       session[:original_uri] = nil
 
-      respond_with(render :status => 200,
-                          :json => { :success => true,
-                                     :info => "Logged in",
-                                     :user => current_user })
-
       #redirect_to(uri || home_url)
-
-
       #flash[:notice] = I18n.t('sessions.login-success')
     else
-
-      respond_with(render :status => 401,
-                          :json => { :success => false,
-                                     :info => "Log in credentials failed"})
 
       #flash[:error] = I18n.t('sessions.login-failure') + " #{params[:login]}"
       #redirect_to new_session_url
