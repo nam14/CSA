@@ -13,11 +13,13 @@ class SessionsController < ApplicationController
   # POST /session
   def create 
     user_detail = UserDetail.authenticate(params[:login], params[:password])
-    render :json => user_detail
+
     if user_detail
       self.current_user = user_detail
       uri = session[:original_uri]
       session[:original_uri] = nil
+
+      render :json => user_detail
 
       #redirect_to(uri || home_url)
       #flash[:notice] = I18n.t('sessions.login-success')
@@ -31,7 +33,8 @@ class SessionsController < ApplicationController
   #DELETE /session
   def destroy
     session[:user_id] = nil
-    redirect_to home_url
+    render :json => {:status => 200}
+    #redirect_to home_url
   end
 
 end

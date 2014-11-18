@@ -24,5 +24,13 @@ module Csa
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password]
     I18n.config.enforce_available_locales = true
+
+    config.middleware.insert_before 0, "Rack::Cors" do
+      allow do
+        origins '*'
+        resource '*', :headers => :any, :methods => [:get, :post, :delete, :put, :options]
+      end
+    end
+
   end
 end
