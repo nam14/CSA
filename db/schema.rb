@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130904124852) do
+ActiveRecord::Schema.define(version: 20141119123528) do
 
   create_table "broadcasts", force: true do |t|
     t.text     "content"
@@ -45,6 +45,16 @@ ActiveRecord::Schema.define(version: 20130904124852) do
   end
 
   add_index "images", ["user_id"], name: "index_images_on_user_id"
+
+  create_table "sessions", force: true do |t|
+    t.string   "session_id", null: false
+    t.text     "data"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "sessions", ["session_id"], name: "index_sessions_on_session_id", unique: true
+  add_index "sessions", ["updated_at"], name: "index_sessions_on_updated_at"
 
   create_table "user_details", force: true do |t|
     t.string  "login",            limit: 40

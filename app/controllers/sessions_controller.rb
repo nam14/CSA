@@ -4,14 +4,13 @@ class SessionsController < ApplicationController
   skip_before_action :login_required
   skip_before_action :verify_authenticity_token
 
-  respond_to :json
 
   # GET /session/new
   def new
   end
 
   # POST /session
-  def create 
+  def create
     user_detail = UserDetail.authenticate(params[:login], params[:password])
 
     if user_detail

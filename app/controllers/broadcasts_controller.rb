@@ -12,9 +12,12 @@ class BroadcastsController < ApplicationController
   # GET /broadcasts
   # GET /broadcasts.json
   def index
-    @broadcasts = Broadcast.paginate(page: params[:page],
-                                     per_page: params[:per_page])
-                           .order('created_at DESC')
+
+    @broadcasts = Broadcast.all
+
+    render :json => @broadcasts
+
+    #@broadcasts = Broadcast.paginate(page: params[:page], per_page: params[:per_page]).order('created_at DESC')
   end
 
   # GET /broadcasts/1

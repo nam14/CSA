@@ -2,7 +2,7 @@ class ApplicationController < ActionController::Base
 
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
-  protect_from_forgery with: :exception
+ # protect_from_forgery with: :exception
 
   # Allows these methods to be available in the views
   helper_method :is_admin?, :logged_in?, :current_user
@@ -10,6 +10,18 @@ class ApplicationController < ActionController::Base
   before_action :set_locale
   after_action :store_location, only: [:index, :new, :show, :edit, :search]
  # before_action :login_required
+
+  protect_from_forgery
+  after_filter :set_csrf_cookie_for_ng
+
+  def set_csrf_cookie_for_ng
+    cookies['XSRF-TOKEN'] = form_authenticity_token if protect_against_forgery?
+  end
+
+  protected
+  def verified_request?
+    super || form_authenticity_token == request.headers['X-XSRF-TOKEN']
+  end
 
   protected
 
@@ -47,7 +59,7 @@ class ApplicationController < ActionController::Base
 
   def login_from_session
     self.current_user =
-        UserDetail.find(session[:user_id]) if session[:user_id]
+        UserDetail.find(session[:current_user_id]) if session[:current_user_id]
   end
 
   def login_from_basic_auth

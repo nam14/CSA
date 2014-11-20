@@ -22,9 +22,6 @@ class UsersController < ApplicationController
   before_action :set_user, only: [:show, :edit, :update, :destroy]
 
   before_filter :allow_cors
-
-
-
   rescue_from ActiveRecord::RecordNotFound, with: :show_record_not_found
 
   def search
