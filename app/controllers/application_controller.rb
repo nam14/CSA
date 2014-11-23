@@ -2,31 +2,33 @@ class ApplicationController < ActionController::Base
 
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
- # protect_from_forgery with: :exception
+  # protect_from_forgery with: :exception
 
   # Allows these methods to be available in the views
   helper_method :is_admin?, :logged_in?, :current_user
 
   before_action :set_locale
   after_action :store_location, only: [:index, :new, :show, :edit, :search]
- # before_action :login_required
+  before_action :login_required
 
-  protect_from_forgery
-  after_filter :set_csrf_cookie_for_ng
-
-  def set_csrf_cookie_for_ng
-    cookies['XSRF-TOKEN'] = form_authenticity_token if protect_against_forgery?
-  end
-
-  protected
-  def verified_request?
-    super || form_authenticity_token == request.headers['X-XSRF-TOKEN']
-  end
 
   protected
 
   def login_required
     logged_in? || access_denied
+  end
+
+
+  def allow_cors
+    headers["Access-Control-Allow-Origin"] = "http://localhost:9000"
+    headers['Access-Control-Allow-Methods'] = 'POST, PUT, DELETE, GET, OPTIONS'
+    headers["Access-Control-Allow-Headers"] =
+        %w{Origin Accept Content-Type X-Requested-With X-CSRF-Token}.join(",")
+    headers["Access-Control-Allow-Headers"] = 'Authorization'
+
+    head(:ok) if request.request_method == "OPTIONS"
+    # or, render text: ''
+    # if that's more your style
   end
 
   # To support RESTful authentication we need to treat web browser access differently
@@ -59,11 +61,13 @@ class ApplicationController < ActionController::Base
 
   def login_from_session
     self.current_user =
-        UserDetail.find(session[:current_user_id]) if session[:current_user_id]
+        UserDetail.find(session[:user_id]) if session[:_user_id]
   end
 
   def login_from_basic_auth
     authenticate_with_http_basic do |login, password|
+      logger.info login
+      logger.info password
       self.current_user = UserDetail.authenticate(login, password)
     end
   end

@@ -2,27 +2,12 @@ class UsersController < ApplicationController
   # Since dealing with sensitive data we use SSL
   # Only destroy does not require SSL, all the others do
 
- # force_ssl except: [:destroy]
-
-
-
-  def allow_cors
-    headers["Access-Control-Allow-Origin"] = "*"
-    headers["Access-Control-Allow-Methods"] = %w{GET POST PUT DELETE}.join(",")
-    headers["Access-Control-Allow-Headers"] =
-        %w{Origin Accept Content-Type X-Requested-With X-CSRF-Token}.join(",")
-
-    head(:ok) if request.request_method == "OPTIONS"
-    # or, render text: ''
-    # if that's more your style
-  end
+  force_ssl except: [:destroy]
 
 #  before_action :admin_required, only: [:index, :search, :destroy]
   before_action :set_current_page, except: [:index]
   before_action :set_user, only: [:show, :edit, :update, :destroy]
-
   before_filter :allow_cors
-  rescue_from ActiveRecord::RecordNotFound, with: :show_record_not_found
 
   def search
     # Use will_paginate's :conditions and :joins to search across both the
@@ -66,15 +51,20 @@ class UsersController < ApplicationController
   # a specific user to show their own account, but no one else's
   def show
     if current_user.id == @user.id || is_admin?
-      respond_to do |format|
+      render :json => @user
+    #  respond_to do |format|
 
-        format.js { render partial: 'show_local',
-                           locals: {user: @user, current_page: @current_page},
-                           layout: false }
-        format.html # show.html.erb
-        format.json # show.json.builder
-      end
+     #   format.js { render partial: 'show_local',
+     #                      locals: {user: @user, current_page: @current_page},
+     #                      layout: false }
+     #   format.html # show.html.erb
+     #   format.json # show.json.builder
+
+
+    #  end
     else
+      render :status => 401
+
       indicate_illegal_request I18n.t('users.not-your-account')
     end
   end
