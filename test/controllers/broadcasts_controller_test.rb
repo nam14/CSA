@@ -3,6 +3,7 @@ require 'test_helper'
 class BroadcastsControllerTest < ActionController::TestCase
   setup do
     @broadcast = broadcasts(:one)
+    @controller.test_current_user = user_details(:one)
   end
 
   test "should get index" do

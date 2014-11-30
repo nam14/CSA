@@ -11,9 +11,10 @@ class ApplicationController < ActionController::Base
   after_action :store_location, only: [:index, :new, :show, :edit, :search]
   before_action :login_required
 
-
-  def test_current_user=(new_user)
-    self.current_user=new_user
+  if Rails.env.test?
+    def test_current_user=(new_user)
+      self.current_user=new_user
+    end
   end
 
   protected
