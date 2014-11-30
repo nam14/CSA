@@ -38,11 +38,7 @@ class UsersController < ApplicationController
   # GET /users.json
   def index
     @users = User.all
-      respond_to :html, :json
-
-    #  User.paginate(page: params[:page],
-         #               per_page: params[:per_page])
-           #     .order('surname, firstname')
+    respond_to :html, :json
   end
 
   # GET /users/1
@@ -94,11 +90,14 @@ class UsersController < ApplicationController
     # handle saving images correctly
     @service = ImageService.new(@user, @image)
 
-
-    if @service.save # Will attempt to save user and image
-      render :json => {msg: 'Successful'}, :status => :created
-    else
-      render :json => @user.errors, :status => :unprocessable_entity
+    respond_to do |format|
+      if @service.save # Will attempt to save user and image
+        format.html { redirect_to(user_url(@user, page: @current_page),
+                                  notice: I18n.t('users.account-created')) }
+        format.json { render action: 'show', status: :created, location: @user }
+      else
+        render :json => @user.errors, :status => :unprocessable_entity
+      end
     end
   end
 
@@ -129,7 +128,10 @@ class UsersController < ApplicationController
 # DELETE /users/1.json
   def destroy
     if @user.destroy
-        render :json => {msg: 'Successful'}, :status => :ok
+      respond_to do |format|
+        format.html { redirect_to users_url(page: @current_page) }
+        format.json {render status: :ok}
+      end
     else
       render :json => {error: @user.errors}, :status => :unprocessable_entity
     end

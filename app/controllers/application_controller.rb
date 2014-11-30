@@ -12,6 +12,10 @@ class ApplicationController < ActionController::Base
   before_action :login_required
 
 
+  def test_current_user=(new_user)
+    self.current_user=new_user
+  end
+
   protected
 
   def login_required
@@ -61,7 +65,7 @@ class ApplicationController < ActionController::Base
 
   def login_from_session
     self.current_user =
-        UserDetail.find(session[:user_id]) if session[:_user_id]
+        UserDetail.find(session[:user_id]) if session[:user_id]
   end
 
   def login_from_basic_auth

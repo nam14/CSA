@@ -4,7 +4,7 @@ class BroadcastsController < ApplicationController
   rescue_from ActiveRecord::RecordNotFound, with: :squelch_record_not_found
   # This is an admin specific controller, so enforce access by admin only
   # This is a very simple form of authorisation
- # before_action :admin_required
+  before_action :admin_required
 
   # Default number of entries per page
   PER_PAGE = 12
@@ -12,12 +12,9 @@ class BroadcastsController < ApplicationController
   # GET /broadcasts
   # GET /broadcasts.json
   def index
-
-    @broadcasts = Broadcast.all
-
-    render :json => @broadcasts
-
-    #@broadcasts = Broadcast.paginate(page: params[:page], per_page: params[:per_page]).order('created_at DESC')
+    @broadcasts = Broadcast.paginate(page: params[:page],
+                                     per_page: params[:per_page])
+                           .order('created_at DESC')
   end
 
   # GET /broadcasts/1

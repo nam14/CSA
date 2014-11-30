@@ -1,0 +1,5 @@
+
+one:
+  login: admin
+  crypted_password: password
+  user: one
