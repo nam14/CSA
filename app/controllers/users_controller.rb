@@ -4,7 +4,7 @@ class UsersController < ApplicationController
 
   force_ssl except: [:destroy]
 
-#  before_action :admin_required, only: [:index, :search, :destroy]
+  before_action :admin_required, only: [:index, :search, :destroy]
   before_action :set_current_page, except: [:index]
   before_action :set_user, only: [:show, :edit, :update, :destroy]
   before_filter :allow_cors
@@ -51,21 +51,15 @@ class UsersController < ApplicationController
   # a specific user to show their own account, but no one else's
   def show
     if current_user.id == @user.id || is_admin?
-      render :json => @user
-    #  respond_to do |format|
-
-     #   format.js { render partial: 'show_local',
-     #                      locals: {user: @user, current_page: @current_page},
-     #                      layout: false }
-     #   format.html # show.html.erb
-     #   format.json # show.json.builder
-
-
-    #  end
+      respond_to do |format|
+        format.js { render partial: 'show_local',
+                         locals: {user: @user, current_page: @current_page},
+                           layout: false }
+        format.html # show.html.erb
+        format.json # show.json.builder
+      end
     else
-      render :status => 401
-
-      indicate_illegal_request I18n.t('users.not-your-account')
+      render :json => {error: 'You are not authorized to view this user'}, :status => :unauthorized
     end
   end
 
@@ -73,6 +67,7 @@ class UsersController < ApplicationController
   def new
     @user = User.new
     @user.user_detail = UserDetail.new
+    render :json => @user
   end
 
   # GET /users/1/edit
@@ -99,15 +94,11 @@ class UsersController < ApplicationController
     # handle saving images correctly
     @service = ImageService.new(@user, @image)
 
-    respond_to do |format|
-      if @service.save # Will attempt to save user and image
-        format.html { redirect_to(user_url(@user, page: @current_page),
-                                  notice: I18n.t('users.account-created')) }
-        format.json { render action: 'show', status: :created, location: @user }
-      else
-        format.html { render action: 'new' }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
-      end
+
+    if @service.save # Will attempt to save user and image
+      render :json => {msg: 'Successful'}, :status => :created
+    else
+      render :json => @user.errors, :status => :unprocessable_entity
     end
   end
 
@@ -125,23 +116,22 @@ class UsersController < ApplicationController
           format.html { redirect_to(user_url(@user, page: @current_page),
                                     notice: I18n.t('users.account-created')) }
           format.json { head :no_content }
-        else
-          format.html { render action: 'edit' }
-          format.json { render json: @user.errors, status: :unprocessable_entity }
-        end
+      else
+        render :json => {error: @user.errors}, :status => :unprocessable_entity
+      end
       end
     else
-      indicate_illegal_request I18n.t('users.not-your-account')
+      render :json => {error: 'You are not authorized to update this user'}, :status => :unauthorized
     end
   end
 
 # DELETE /users/1
 # DELETE /users/1.json
   def destroy
-    @user.destroy
-    respond_to do |format|
-      format.html { redirect_to users_url(page: @current_page) }
-      format.json { head :no_content }
+    if @user.destroy
+        render :json => {msg: 'Successful'}, :status => :ok
+    else
+      render :json => {error: @user.errors}, :status => :unprocessable_entity
     end
   end
 

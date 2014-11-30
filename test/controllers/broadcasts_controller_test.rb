@@ -29,16 +29,6 @@ class BroadcastsControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  test "should get edit" do
-    get :edit, id: @broadcast
-    assert_response :success
-  end
-
-  test "should update broadcast" do
-    patch :update, id: @broadcast, broadcast: { content: @broadcast.content, user_id: @broadcast.user_id }
-    assert_redirected_to broadcast_path(assigns(:broadcast))
-  end
-
   test "should destroy broadcast" do
     assert_difference('Broadcast.count', -1) do
       delete :destroy, id: @broadcast

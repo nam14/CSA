@@ -13,10 +13,6 @@ gem 'jquery-ui-rails', '~> 4.0.5'
 
 gem 'rack-cors', :require => 'rack/cors'
 
-gem 'angular-csrf-cookie-rails' 
-
-
-#gem 'linecache19', '>= 0.5.13', :git => 'https://github.com/robmathews/linecache19-0.5.13.git'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.1.6'
