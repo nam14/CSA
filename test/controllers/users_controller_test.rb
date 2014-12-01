@@ -29,7 +29,7 @@ class UsersControllerTest < ActionController::TestCase
                             surname: @user.surname }
     end
 
-    assert_redirected_to "#{user_path(assigns(:user))}?page=1"
+    assert_response :created
   end
 
   test "should show user" do
@@ -44,14 +44,13 @@ class UsersControllerTest < ActionController::TestCase
 
   test "should update user" do
     patch :update, id: @user, user: { email: @user.email, firstname: @user.firstname, grad_year: @user.grad_year, jobs: @user.jobs, phone: @user.phone, surname: @user.surname }
-    assert_redirected_to "#{user_path(assigns(:user))}?page=1"
+    assert_response :ok
   end
 
   test "should destroy user" do
     assert_difference('User.count', -1) do
       delete :destroy, id: @user
     end
-
-    assert_redirected_to "#{users_path}?page=1"
+    assert_response :ok
   end
 end

@@ -114,6 +114,7 @@ class ApplicationController < ActionController::Base
         flash[:error] = 'You must be admin to do that'
         redirect_to root_url
       end
+      format.json {render json: {error: 'You must be admin to do that'}, status: :unauthorized}
     end
   end
 

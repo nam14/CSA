@@ -48,9 +48,6 @@ class UsersController < ApplicationController
   def show
     if current_user.id == @user.id || is_admin?
       respond_to do |format|
-        format.js { render partial: 'show_local',
-                         locals: {user: @user, current_page: @current_page},
-                           layout: false }
         format.html # show.html.erb
         format.json # show.json.builder
       end
@@ -90,14 +87,11 @@ class UsersController < ApplicationController
     # handle saving images correctly
     @service = ImageService.new(@user, @image)
 
-    respond_to do |format|
-      if @service.save # Will attempt to save user and image
-        format.html { redirect_to(user_url(@user, page: @current_page),
-                                  notice: I18n.t('users.account-created')) }
-        format.json { render action: 'show', status: :created, location: @user }
-      else
-        render :json => @user.errors, :status => :unprocessable_entity
-      end
+
+    if @service.save # Will attempt to save user and image
+      render :json => {msg: 'Successful'}, :status => :created
+    else
+      render :json => @user.errors, :status => :unprocessable_entity
     end
   end
 
@@ -108,17 +102,14 @@ class UsersController < ApplicationController
   def update
     if current_user.id == @user.id || is_admin?
       @image = @user.image
+
       @service = ImageService.new(@user, @image)
 
-      respond_to do |format|
         if @service.update_attributes(user_params, params[:image_file])
-          format.html { redirect_to(user_url(@user, page: @current_page),
-                                    notice: I18n.t('users.account-created')) }
-          format.json { head :no_content }
-      else
-        render :json => {error: @user.errors}, :status => :unprocessable_entity
-      end
-      end
+          render :json => {msg: 'Updated'}, :status => :ok
+        else
+          render :json => {error: @user.errors}, :status => :unprocessable_entity
+        end
     else
       render :json => {error: 'You are not authorized to update this user'}, :status => :unauthorized
     end
@@ -128,10 +119,7 @@ class UsersController < ApplicationController
 # DELETE /users/1.json
   def destroy
     if @user.destroy
-      respond_to do |format|
-        format.html { redirect_to users_url(page: @current_page) }
-        format.json {render status: :ok}
-      end
+        render :json => {msg: 'Successful'}, :status => :ok
     else
       render :json => {error: @user.errors}, :status => :unprocessable_entity
     end
