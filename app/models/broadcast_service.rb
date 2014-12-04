@@ -11,6 +11,7 @@ class BroadcastService
   def self.broadcast(broadcast, feeds)
     puts "feeds: #{feeds.inspect}"
     result = []
+
     feeds.each do |feed, value|
       case feed
         when "twitter"

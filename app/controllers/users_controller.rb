@@ -37,8 +37,16 @@ class UsersController < ApplicationController
   # GET /users
   # GET /users.json
   def index
-    @users = User.all
-    respond_to :html, :json
+    respond_to do |format|
+      format.html {
+        @users = User.paginate(page: params[:page],
+                                per_page: params[:per_page]).order('surname, firstname')
+      }
+      format.json {
+        @users = User.all
+        render json: @users
+      }
+      end
   end
 
   # GET /users/1
