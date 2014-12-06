@@ -5,6 +5,7 @@ class BroadcastsController < ApplicationController
   # This is an admin specific controller, so enforce access by admin only
   # This is a very simple form of authorisation
   before_action :admin_required
+  before_filter :allow_cors
 
   # Default number of entries per page
   PER_PAGE = 12
@@ -12,9 +13,19 @@ class BroadcastsController < ApplicationController
   # GET /broadcasts
   # GET /broadcasts.json
   def index
-    @broadcasts = Broadcast.paginate(page: params[:page],
-                                     per_page: params[:per_page])
-                           .order('created_at DESC')
+
+    respond_to do |format|
+      format.html {
+        @broadcasts = Broadcast.paginate(page: params[:page],
+                                         per_page: params[:per_page])
+        .order('created_at DESC')
+      }
+      format.json {
+        @broadcasts = Broadcast.all
+        render json: @broadcasts
+      }
+    end
+
   end
 
   # GET /broadcasts/1

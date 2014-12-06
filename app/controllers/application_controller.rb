@@ -27,8 +27,6 @@ class ApplicationController < ActionController::Base
   def allow_cors
     headers["Access-Control-Allow-Origin"] = "http://localhost:9000"
     headers['Access-Control-Allow-Methods'] = 'POST, PUT, DELETE, GET, OPTIONS'
-    headers["Access-Control-Allow-Headers"] =
-        %w{Origin Accept Content-Type X-Requested-With X-CSRF-Token}.join(",")
     headers["Access-Control-Allow-Headers"] = 'Authorization'
 
     head(:ok) if request.request_method == "OPTIONS"
