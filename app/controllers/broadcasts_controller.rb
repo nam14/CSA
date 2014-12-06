@@ -80,15 +80,13 @@ class BroadcastsController < ApplicationController
           format.json { render json: @broadcast, status: :created, location: @broadcast }
         else
           format.html { render :new }
-          format.xml {
             # Either say it partly worked but send back the errors or else send
             # back complete failure indicator (couldn't even save)
-            if results
-              render json: @broadcast.errors, status: :created, location: @broadcast
-            else
-              render json: @broadcast.errors, status: :unprocessable_entity
-            end
-          }
+          if results
+            render json: @broadcast.errors, status: :created, location: @broadcast
+          else
+            render json: @broadcast.errors, status: :unprocessable_entity
+          end
         end
       end
     end

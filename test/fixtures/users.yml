@@ -8,4 +8,10 @@ one:
   jobs: false
   email: cwl@aber.ac.uk
 
-
+two:
+  surname: Miller
+  firstname: Natalia
+  phone: 622422
+  grad_year: 2003
+  jobs: true
+  email: nam14@aber.ac.uk

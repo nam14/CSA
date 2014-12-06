@@ -34,6 +34,10 @@ class UserDetail < ActiveRecord::Base
     user_detail
   end
 
+  def test_create_new_salt
+    return self.object_id.to_s + rand.to_s
+  end
+
   private
 
   def prepare_password
@@ -47,6 +51,7 @@ class UserDetail < ActiveRecord::Base
   end
 
   def self.encrypt_password(password, salt)
+
     string_to_hash = password + "wibble" + salt
     Digest::SHA256.hexdigest(string_to_hash)
   end
