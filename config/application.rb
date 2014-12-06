@@ -28,7 +28,9 @@ module Csa
     config.middleware.insert_before 0, "Rack::Cors" do
       allow do
         origins 'http://localhost:9000'
-        resource '*', :headers => :any, :methods => [:get, :post, :delete, :put, :options]
+        resource '*',
+        :headers => 'Authorization',
+        :methods => [:get, :post, :delete, :put, :options]
       end
     end
 

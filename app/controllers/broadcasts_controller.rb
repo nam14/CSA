@@ -5,7 +5,6 @@ class BroadcastsController < ApplicationController
   # This is an admin specific controller, so enforce access by admin only
   # This is a very simple form of authorisation
   before_action :admin_required
-  before_filter :allow_cors
 
   # Default number of entries per page
   PER_PAGE = 12
@@ -31,7 +30,12 @@ class BroadcastsController < ApplicationController
   # GET /broadcasts/1
   # GET /broadcasts/1.json
   def show
+    respond_to do |format|
+      format.html # show.html.erb
+      format.json # show.json.builder
+    end
   end
+
 
   # GET /broadcasts/new
   def new

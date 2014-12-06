@@ -7,7 +7,6 @@ class UsersController < ApplicationController
   before_action :admin_required, only: [:index, :search, :destroy]
   before_action :set_current_page, except: [:index]
   before_action :set_user, only: [:show, :edit, :update, :destroy]
-  before_filter :allow_cors
 
   def search
     # Use will_paginate's :conditions and :joins to search across both the

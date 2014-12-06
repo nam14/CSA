@@ -1,1 +1,1 @@
-json.extract! @broadcast, :content, :user_id, :created_at
+json.extract! @broadcast, :id, :content, :user_id, :created_at

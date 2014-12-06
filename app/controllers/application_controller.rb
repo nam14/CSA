@@ -24,16 +24,6 @@ class ApplicationController < ActionController::Base
   end
 
 
-  def allow_cors
-    headers["Access-Control-Allow-Origin"] = "http://localhost:9000"
-    headers['Access-Control-Allow-Methods'] = 'POST, PUT, DELETE, GET, OPTIONS'
-    headers["Access-Control-Allow-Headers"] = 'Authorization'
-
-    head(:ok) if request.request_method == "OPTIONS"
-    # or, render text: ''
-    # if that's more your style
-  end
-
   # To support RESTful authentication we need to treat web browser access differently
   # to web service B2B style interaction:
   # o For HTML B2C based requests we redirect users to a login screen as part of
